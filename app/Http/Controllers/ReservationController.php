@@ -32,13 +32,14 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Il n\'y a pas assez de places disponibles.'], 400);
     }
 
-    // Create a new reservation
-    $reservation = new Reservation();
-    $reservation->user_id = Auth::id();
-    $reservation->event_id = $event->id;
-    $reservation->status = 'pending';
-    $reservation->save();
-    dd($reservation);
+    // // Create a new reservation
+    // $reservation = new Reservation();
+    // $reservation->user_id = Auth::id();
+    // $reservation->event_id = $event->id;
+    // $reservation->status = 'pending';
+
+    // $reservation->save();
+    // dd($reservation);
     // Decrease the number of available places
     $event->nombre_place -= $validated['nombre_place'];
     $event->save();
@@ -47,7 +48,7 @@ class ReservationController extends Controller
     Auth::user()->notify(new ReservationStatusNotification($reservation));
 
     // Notify the administrator
-    $admin = User::where('is_admin', true)->first();
+    $admin = User::where('admin', true)->first();
     if ($admin) {
         $admin->notify(new ReservationStatusNotification($reservation));
     }
@@ -119,7 +120,7 @@ class ReservationController extends Controller
     $reservation->save();
 
     // Notify admin
-    $admin = User::where('is_admin', true)->first();
+    $admin = User::where('admin', true)->first();
     if ($admin) {
         $admin->notify(new ReservationStatusNotification($reservation));
     }

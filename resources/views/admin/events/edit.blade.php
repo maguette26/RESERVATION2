@@ -1,10 +1,8 @@
-@extends('dashboard')
+@extends('layouts.app')
 
-@section('titre')
-Édition Événement
-@endsection
+@section('title', 'Modifier un événement')
 
-@section('main')
+@section('content')
 {{-- Affichage des messages de session --}}
 @if (session('success'))
     <div class="alert alert-success">

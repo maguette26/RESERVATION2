@@ -18,8 +18,13 @@ class CheckoutController extends Controller
         if (Auth::check()) {
             $panier = \Cart::getContent();
             $total = \Cart::getTotal();
+            $event = Event::find($id); // Trouver l'événement par son ID
 
-            return view('frontend.checkout', compact('panier', 'total'));
+            if (!$event) {
+                return redirect()->back()->withErrors(['message' => 'Événement non trouvé.']);
+            }
+
+            return view('frontend.checkout', compact('panier', 'total', 'event'));
         } else {
             return redirect()->route('login')->with('message', 'Veuillez vous connecter pour accéder à la caisse.');
         }
@@ -62,6 +67,7 @@ class CheckoutController extends Controller
         $reservation->event_id = $firstPanier->id;
         $reservation->status = 'confirmation';
         $reservation->total = \Cart::getTotal();
+        $reservation->date_reservation = now();
         $reservation->save();
 
         // Enregistrez les détails de la réservation

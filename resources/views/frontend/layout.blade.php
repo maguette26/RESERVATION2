@@ -83,7 +83,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
-                   
+
                         @guest
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,11 +97,11 @@
                         @endguest
 
                         <!-- Panier -->
-                          {{-- <li class="nav-item">
+                            <li class="nav-item">
                             <a href="{{ route('cart.index') }}" class="nav-link">
                                 <i class="fa fa-shopping-bag" aria-hidden="true"></i> Panier ({{ $count }})
                             </a>
-                        </li>  --}}
+                        </li>
                         <li class="nav-item">
                             <button type="button" class="btn btn-outline-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal" style="padding: 0.5rem 1rem; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
                                 <i class="fa fa-search fa-lg"></i> <span class="ms-2">Rechercher</span>

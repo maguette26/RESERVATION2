@@ -25,10 +25,10 @@ class EventController extends Controller
         $query = $request->input('query');
 
         // Recherche des événements selon le nom ou la description
-        $events = Event::where('name', 'like', "%{$query}%")
+        $event = Event::where('name', 'like', "%{$query}%")
                         ->orWhere('description', 'like', "%{$query}%")
                         ->get();
 
-        return view('frontend.recherche', compact('events'));
+        return view('frontend.recherche', compact('event'));
     }
 }

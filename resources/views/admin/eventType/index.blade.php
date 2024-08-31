@@ -1,9 +1,11 @@
-@extends('dashboard')
+@extends('layouts.app')
+
+@section('title', 'Liste des types d\'événements')
 
 @section('content')
 <div class="container">
-    <h1>Liste des types d'événements</h1>
-    <a href="{{ route('admin.eventTypes.create') }}" class="btn btn-primary">Ajouter un type d'événement</a>
+    <h1 class="mb-4">Liste des types d'événements</h1>
+    <a href="{{ route('admin.eventTypes.create') }}" class="btn btn-primary mb-3">Ajouter un type d'événement</a>
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

@@ -72,7 +72,7 @@
                         <div class="col-lg-6 mb-4 animate__animated animate__fadeInUp">
                             <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; overflow: hidden;">
                                 <div class="position-relative">
-                                    <img src="{{ asset('storage/'.$event->image) }}" class="card-img-top" alt="{{ $event->name }}" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ asset('storage/images'.$event->image) }}" class="card-img-top" alt="{{ $event->name }}" style="height: 200px; object-fit: cover;">
                                     <div class="badge bg-primary position-absolute top-0 start-0 m-2 px-3 py-2" style="font-size: 0.8rem;">{{ $event->eventType->categorie }}</div>
                                 </div>
                                 <div class="card-body d-flex flex-column">

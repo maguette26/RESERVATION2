@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -19,7 +22,9 @@ class AdminController extends Controller
         //
         $user = Auth::user();
         if ($user && $user->role == 'admin') {
-            return view('dashboard'); // Vue d'administration
+        $events = Event::all();
+        return view('admin.events.index', compact('events'));
+
         }
 
         return redirect('/'); // Redirection si l'utilisateur n'est pas admin
@@ -31,49 +36,48 @@ class AdminController extends Controller
     public function create()
     { $user = Auth::user();
         if ($user && $user->role == 'admin') {
-        $events = Event::all();
-        return view('admin.events.create', ['events' => $events]);
+            $eventTypes = EventType::all();
+            return view('admin.events.create', ['eventTypes' => $eventTypes]);
     }
 
     return redirect('/');
 }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'lieu' => 'required|string',
-            'image' => 'required|image|max:1024',
-            'nombre_place' => 'required|integer|max:50000',
-            'description' => 'required|string',
-            'date' => 'required|date',
-            'prix' => 'required|integer|max:50000',
-            'event_type_id' => 'required|integer',
-            'heure' => 'required|date_format:H:i',
-        ]);
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'lieu' => 'required|string',
+        'image' => 'required|image|max:1024',
+        'nombre_place' => 'required|integer|max:50000',
+        'description' => 'required|string',
+        'date' => 'required|date',
+        'prix' => 'required|integer|max:50000',
+        'event_type_id' => 'required|integer',
+        'heure' => 'required|date_format:H:i',
+    ]);
 
-        $event = new Event();
-        $event->fill($validated);
+    $event = new Event();
+    $event->fill($validated);
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $path = $file->store('images', 'public');
-            $event->image = $path;
-        }
-
-        $event->save();
-
-        return redirect()->route('admin.index')->with('notice', 'Ajout effectué avec succès');
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $path = $file->store('images', 'public');
+        $event->image = $path;
     }
 
+    $event->save();
+
+    return redirect()->route('admin.index')->with('success', 'Événement ajouté avec succès');
+}
 
 public function edit($id)
 {
     $user = Auth::user();
         if ($user && $user->role == 'admin') {
     $event = Event::findOrFail($id);
-    $events = Event::all();
-    return view('admin.events.edit', compact('event', 'events'));
+    $eventTypes = EventType::all();
+    return view('admin.events.edit', compact('event', 'eventTypes'));
 }
 return redirect('/');
 }

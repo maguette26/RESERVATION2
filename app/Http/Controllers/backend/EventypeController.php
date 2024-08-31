@@ -11,7 +11,7 @@ class EventypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function ind()
+    public function index()
     {
         $user = Auth::user();
         if ($user && $user->role == 'admin') {
@@ -80,7 +80,7 @@ class EventypeController extends Controller
         $user = Auth::user();
         if ($user && $user->role == 'admin') {
             $request->validate([
-                'name' => 'required|string|max:255',
+                'categorie' => 'required|string|max:255',
 
             ]);
 
@@ -110,5 +110,16 @@ class EventypeController extends Controller
         }
 
         return redirect('/');
+    }
+
+
+    public function art(){
+
+    }
+    public function concert(){
+
+    }
+    public function conference(){
+
     }
 }
