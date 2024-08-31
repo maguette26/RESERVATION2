@@ -55,64 +55,78 @@
 
     <!-- Header Section Start -->
 
-<header class="container-fluid nav-bar">
-    <div class="container">
-        <nav class="navbar navbar-light navbar-expand-lg py-4">
-            <a href="{{ url('/')}}" class="navbar-brand">
-                <h1 class="text-primary fw-bold mb-0">SenReserv<span class="text-dark"> Evens</span> </h1>
-            </a>
-            <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="fa fa-bars text-primary"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav mx-auto">
-                    <a href="{{ url('/')}}" class="nav-item nav-link">Accueil</a>
-                    <a href="{{ url('ap')}}" class="nav-item nav-link">À propos</a>
-                    <div class="dropdown">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Catégorie
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('categorie.concert') }}" class="dropdown-item">Concert</a></li>
-                            <li><a href="{{ route('categorie.conference') }}" class="dropdown-item">Conférence</a></li>
-                            <li><a href="{{ route('categorie.exposition') }}" class="dropdown-item">Exposition d'art</a></li>
+    <header class="container-fluid nav-bar">
+        <div class="container">
+            <nav class="navbar navbar-light navbar-expand-lg py-4">
+                <a href="{{ url('/')}}" class="navbar-brand">
+                    <h1 class="text-primary fw-bold mb-0">SenReserv<span class="text-dark"> Evens</span></h1>
+                </a>
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a href="{{ url('/')}}" class="nav-item nav-link">Accueil</a>
+                        <a href="{{ url('ap')}}" class="nav-item nav-link">À propos</a>
+                        <div class="dropdown">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Catégorie
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ route('categorie.concert') }}" class="dropdown-item">Concert</a></li>
+                                <li><a href="{{ route('categorie.conference') }}" class="dropdown-item">Conférence</a></li>
+                                <li><a href="{{ route('categorie.exposition') }}" class="dropdown-item">Exposition d'art</a></li>
+                            </ul>
+                        </div>
+                        <a href="{{ url('contact')}}" class="nav-item nav-link">Contact</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+
+                            @guest
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
+                                    <li><a class="dropdown-item" href="{{ route('login') }}">Connexion</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('register') }}">Inscription</a></li>
+                                </ul>
+                            </li>
+                            @else
+                            <li class="nav-item">
+                                <a href="{{ route('reservations.index') }}" class="nav-link">
+                                    <i class="fa fa-calendar-check" aria-hidden="true"></i> Mes Réservations
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link nav-link">
+                                        <i class="fa fa-sign-out-alt" aria-hidden="true"></i> Déconnexion
+                                    </button>
+                                </form>
+                            </li>
+                            @endguest
+
+                            <!-- Panier -->
+                            <li class="nav-item">
+                                <a href="{{ route('cart.index') }}" class="nav-link">
+                                    <i class="fa fa-shopping-bag" aria-hidden="true"></i> Panier ({{ $count }})
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="btn btn-outline-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal" style="padding: 0.5rem 1rem; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                                    <i class="fa fa-search fa-lg"></i> <span class="ms-2">Rechercher</span>
+                                </button>
+                            </li>
                         </ul>
                     </div>
-                    <a href="{{ url('contact')}}" class="nav-item nav-link">Contact</a>
                 </div>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-
-                        @guest
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="authDropdown">
-                                <li><a class="dropdown-item" href="{{ route('login') }}">Connexion</a></li>
-                                <li><a class="dropdown-item" href="{{ route('register') }}">Inscription</a></li>
-                            </ul>
-                        </li>
-                        @endguest
-
-                        <!-- Panier -->
-                            <li class="nav-item">
-                            <a href="{{ route('cart.index') }}" class="nav-link">
-                                <i class="fa fa-shopping-bag" aria-hidden="true"></i> Panier ({{ $count }})
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <button type="button" class="btn btn-outline-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#searchModal" style="padding: 0.5rem 1rem; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                                <i class="fa fa-search fa-lg"></i> <span class="ms-2">Rechercher</span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </div>
-</header>
+            </nav>
+        </div>
+    </header>
 
 
     <!-- Header Section End -->

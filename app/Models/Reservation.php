@@ -16,8 +16,9 @@ class Reservation extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function event()
+    public function events()
     {
-        return $this->belongsTo(Event::class);
-    }
+        return $this->belongsToMany(Event::class, 'event_reservation')
+        ->withPivot('quantite', 'prix');    }
+
 }

@@ -38,7 +38,7 @@ class CartController extends Controller
                 'quantity' => $request->number_of_places,
                 'price' => $event->prix,
                 'attributes' => [
-                    'image' => 'storage/'.$event->image,
+                    'image' => $event->image,
                 ],
             ]);
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\backend\AdminController;
 use App\Http\Controllers\backend\EventypeController;
 
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
 });
 // routes client
 Route::get('/', [PageController::class , 'index'])->name('indexx') ;
@@ -56,11 +58,12 @@ Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
+
 //   route payement
 Route::middleware('auth')->group(function () {
     Route::get('checkout/{id}', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::get('confirmation', [CheckoutController::class, 'confirmation'])->name('confirmation');
+    Route::post('confirmation', [CheckoutController::class, 'confirmation'])->name('confirmation');
 });
 
 
@@ -68,9 +71,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 Route::resource('admin/events', EventController::class);
 Route::prefix('admin')->group(function () {
-
-
-    // Routes admin pour la gestion des evenements
+// Routes admin pour la gestion des evenements
     Route::get('/events', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/create', [AdminController::class, 'create'])->name('admin.create');
     Route::post('/create', [AdminController::class, 'store'])->name('admin.store');
@@ -81,11 +82,7 @@ Route::prefix('admin')->group(function () {
     Route::put('/reservations/{id}', [AdminController::class, 'updateReservationStatus'])->name('admin.reservations.update');
     Route::get('/utilisateurs', [AdminController::class, 'showUsers'])->name('admin.utilisateurs');
     Route::get('categories',[EventypeController::class,'index'])->name('categorie');
-
-
-
-
-       // Route pour afficher la liste des types d'événements
+ // Route pour afficher la liste des types d'événements
        Route::get('/eventTypes', [EventypeController::class,'index'])->name('admin.eventTypes.index');
        Route::get('/eventTypes/create', [EventypeController::class, 'create'])->name('admin.eventTypes.create');
        Route::post('/eventTypes', [EventypeController::class, 'store'])->name('admin.eventTypes.store');
@@ -94,6 +91,17 @@ Route::prefix('admin')->group(function () {
        Route::delete('/eventTypes/{id}', [EventypeController::class,'destroy'])->name('admin.eventTypes.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+    Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+    Route::get('/reservations/{id}', [ReservationController::class, 'show'])->name('reservations.show');
+    Route::put('/reservations/{id}', [ReservationController::class, 'update'])->name('reservations.update');
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+    Route::get('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+    Route::post('/reservations/{id}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+
+
+});
 
 
 

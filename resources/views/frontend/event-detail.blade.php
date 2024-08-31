@@ -136,7 +136,7 @@
     <div class="event-title fade-in-up">{{ $event->name }}</div>
     <div class="event-container">
         <!-- Image de l'événement à gauche -->
-        <img src="{{ asset('storage/images' . $event->image) }}" class="event-img img-fluid" alt="{{ $event->name }}">
+        <img src="{{ asset( $event->image) }}" class="event-img img-fluid" alt="{{ $event->name }}">
 
         <!-- Informations de l'événement à droite -->
         <div class="event-info fade-in-up">

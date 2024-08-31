@@ -98,7 +98,14 @@
                             <tr>
                                 <td>{{ $reservation->id }}</td>
                                 <td>{{ $reservation->user->name ?? 'Utilisateur non disponible' }}</td>
-                                <td>{{ $reservation->event->name ?? 'Événement non disponible' }}</td>
+
+                                <td>
+                                    @foreach ($reservation->events as $event)
+                                        {{ $event->name }}
+                                
+                                    @endforeach
+                                </td>
+
                                 <td class="reservation-status
                                     @if($reservation->status === 'confirmed') status-confirmed
                                     @elseif($reservation->status === 'cancelled') status-cancelled

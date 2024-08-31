@@ -26,7 +26,7 @@ class CheckoutController extends Controller
 
             return view('frontend.checkout', compact('panier', 'total', 'event'));
         } else {
-            return redirect()->route('login')->with('message', 'Veuillez vous connecter pour accéder à la caisse.');
+            return redirect()->route('login')->with('message', 'Veuillez vous connecter ou créer un compte pour accéder à la caisse.');
         }
     }
 
@@ -56,28 +56,25 @@ class CheckoutController extends Controller
         }
     }
 
-    public function confirmation()
+    public function confirmation(Request $request)
     {
-        $paniers = \Cart::getContent();
-        $firstPanier = $paniers->first();
 
-        // Créez une nouvelle réservation
+        $paniers = \Cart::getContent();
+
         $reservation = new Reservation();
         $reservation->user_id = Auth::id();
-        $reservation->event_id = $firstPanier->id;
         $reservation->status = 'confirmation';
         $reservation->total = \Cart::getTotal();
         $reservation->date_reservation = now();
         $reservation->save();
 
-        // Enregistrez les détails de la réservation
+        // Enregistrez les détails de la réservation  
         foreach ($paniers as $panier) {
-            ReservationDetail::create([
-                'reservation_id' => $reservation->id,
-                'event_id' => $panier->id,
+            $reservation->events()->attach($panier->id,[
                 'quantite' => $panier->quantity,
                 'prix' => $panier->price,
             ]);
+
         }
 
         // Vider le panier après la confirmation

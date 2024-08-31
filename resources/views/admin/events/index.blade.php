@@ -3,63 +3,61 @@
 @section('title', 'Liste d\'événements')
 
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Liste des événements</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Liste des événements</h1>
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="mb-4">
         <a href="{{ route('admin.create') }}" class="btn btn-primary">Ajouter un événement</a>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Nombre de places</th>
-                <th>Heure</th>
-                <th>Lieu</th>
-                <th>Description</th>
-                <th>Prix</th>
-                <th>Catégorie</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($events as $event)
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
                 <tr>
-                    <td><img src="{{ asset('storage/images'.$event->image) }}" alt="" width="200"></td>
-                    <td>{{ $event->name }}</td>
-                    <td>{{ $event->date }}</td>
-                    <td>{{ $event->nombre_place }}</td>
-                    <td>{{ \Carbon\Carbon::parse($event->heure)->format('H:i') }}</td>
-                    <td>{{ $event->lieu }}</td>
-                    <td>{{ $event->description }}</td>
-                    <td>{{ $event->prix }}</td>
-                    <td>{{ $event->eventType->categorie }}</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <a class="btn btn-warning btn-sm" href="{{ route('admin.edit', $event->id) }}">Modifier</a>
-                            <form action="{{ route('admin.destroy', $event->id) }}" method="post" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                    <th scope="col">Image</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Nombre de places</th>
+                    <th scope="col">Heure</th>
+                    <th scope="col">Lieu</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Prix</th>
+                    <th scope="col">Catégorie</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($events as $event)
+                    <tr>
+                        <td>
+                            @if ($event->image)
+                                <img src="{{ asset($event->image) }}" alt="Image" class="img-thumbnail" style="max-width: 100px;">
+                            @endif
+                        </td>
+                        <td>{{ $event->name }}</td>
+                        <td>{{ $event->date }}</td>
+                        <td>{{ $event->nombre_place }}</td>
+                        <td>{{ $event->heure }}</td>
+                        <td>{{ $event->lieu }}</td>
+                        <td>{{ $event->description }}</td>
+                        <td>{{ $event->prix }}</td>
+                        <td>{{ $event->eventType->categorie }}</td>
+                        <td>
+                            <a href="{{ route('admin.edit', $event->id) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <form action="{{ route('admin.destroy', $event->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                             </form>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<script>
-    function confirmDelete(event) {
-        return confirm("Êtes-vous sûr de vouloir supprimer cet événement ?");
-    }
-</script>
 @endsection

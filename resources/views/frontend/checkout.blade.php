@@ -18,7 +18,7 @@
     </header>
     <main class="container my-5">
         <h2 class="mb-4">Informations de Facturation</h2>
-        <form id="payment-form" action="{{ route('checkout.process') }}" method="POST" class="bg-light p-4 rounded shadow">
+        <form id="payment-form" action="{{ route('confirmation') }}" method="POST" class="bg-light p-4 rounded shadow">
             @csrf
             <div class="form-group">
                 <label for="name">Nom</label>
@@ -37,9 +37,10 @@
                 <div id="card-element" class="form-control">
                     <!-- Un élément de carte sera inséré ici. -->
                 </div>
-                <div id="card-errors" class="text-danger mt-2" role="alert"></div>
+                <div id="card-errors" class="text-danger mt-2" role
+                ="alert"></div>
             </div>
-            <input type="hidden" name="amount" value="{{ $event->price * 100 }}"> <!-- Montant en cents -->
+            {{-- <input type="hidden" name="amount" value="{{ $event->price * 100 }}"> <!-- Montant en cents --> --}}
             <button id="submit-button" class="btn btn-primary">Confirmer la Réservation</button>
         </form>
     </main>

@@ -59,11 +59,13 @@ public function store(Request $request)
 
     $event = new Event();
     $event->fill($validated);
-
+$dossier="newimages";
     if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $path = $file->store('images', 'public');
-        $event->image = $path;
+        // $file = $request->file('image');
+        // $path = $file->move('images', 'public');
+        $nom_image=sha1(time()).".".$request->image->extension();
+        $request->image->move(public_path($dossier),$nom_image);
+        $event->image = $dossier."/".$nom_image;
     }
 
     $event->save();
@@ -129,7 +131,7 @@ return redirect('/');
 
     public function showReservations()
 {
-    $reservations = Reservation::with(['user', 'event'])->get();
+    $reservations = Reservation::with(['user', 'events'])->get();
     return view('admin.reservations', compact('reservations'));
 }
 

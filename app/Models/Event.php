@@ -8,14 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'date', 'nombre_place', 'lieu', 'description', 'image', 'prix','heure', 'event_type_id'];
-    public function eventType()
+
+    protected $fillable = ['date_reservation','user_id', 'event_id', 'status', 'total'];
+
+    public function user()
     {
-        return $this->belongsTo(EventType::class, 'event_type_id');
+        return $this->belongsTo(User::class);
     }
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class);
-    }
+        return $this->belongsToMany(Reservation::class, 'event_reservation')
+        ->withPivot('quantite', 'prix');
+     }
+     public function eventType()
+{
+    return $this->belongsTo(EventType::class);
+}
+
+
 }

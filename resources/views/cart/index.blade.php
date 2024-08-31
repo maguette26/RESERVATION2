@@ -18,34 +18,53 @@
             @if ($panier->isEmpty())
                 <div class="alert alert-warning">Votre panier est vide.</div>
             @else
+                <style>
+                    .item-image {
+                        width: 100px; /* Ajustez cette valeur selon vos besoins */
+                        height: 100px; /* Assurez-vous que la hauteur est proportionnelle à la largeur */
+                        object-fit: cover; /* Assure que l'image couvre le conteneur sans déformation */
+                        margin-right: 15px; /* Espace entre l'image et le texte */
+                        border-radius: 5px; /* Pour des coins légèrement arrondis si souhaité */
+                    }
+
+                    .update-form {
+                        margin-bottom: 1rem;
+                    }
+
+                    .quantity-input {
+                        width: 80px; /* Ajustez la largeur selon vos besoins */
+                    }
+                </style>
+
                 <ul class="list-group mb-4" id="cart-items">
                     @foreach ($panier as $item)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset($item->attributes->image) }}" alt="Image de l'événement" class="item-image">
-
-                                <div>
+                            <div class="row w-100">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <img src="{{ asset($item->attributes->image) }}" alt="Image de l'événement" class="item-image">
+                                </div>
+                                <div class="col-md-8">
                                     <h5 class="mb-1">{{ $item->name }}</h5>
                                     <small>{{ $item->quantity }} x {{ $item->price }} DH</small>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <form action="{{ route('cart.update', $item->id) }}" method="POST" class="mr-2 update-form">
-                                    @csrf
-                                    @method('PATCH')
-                                    <div class="input-group input-group-sm">
-                                        <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control quantity-input" aria-label="Quantité" data-item-id="{{ $item->id }}" data-price="{{ $item->price }}">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Ajouter le nombre de tickets souhaité</span>
+                                <div class="col-md-2 d-flex flex-column align-items-end">
+                                    <form action="{{ route('cart.update', $item->id) }}" method="POST" class="update-form">
+                                        @csrf
+                                        @method('PATCH')
+                                        <div class="input-group input-group-sm mb-2">
+                                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control quantity-input" aria-label="Quantité" data-item-id="{{ $item->id }}" data-price="{{ $item->price }}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">Ajouter le nombre de tickets souhaité</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Mettre à jour</button>
-                                </form>
-                                <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-2" onclick="return confirmDelete()">Supprimer</button>
-                                </form>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">Mettre à jour</button>
+                                    </form>
+                                    <form action="{{ route('cart.destroy', $item->id) }}" method="POST" class="mt-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmDelete()">Supprimer</button>
+                                    </form>
+                                </div>
                             </div>
                         </li>
                     @endforeach
@@ -62,3 +81,5 @@
     </div>
 </div>
 @endsection
+
+.
