@@ -82,22 +82,37 @@
                                         <li><i class="fas fa-map-marker-alt text-primary"></i> <strong>Lieu:</strong> {{ $event->lieu }}</li>
                                         <li><i class="fas fa-clock text-primary"></i> <strong>Heure:</strong> {{ $event->heure }}</li>
                                         <li><i class="fas fa-dollar-sign text-primary"></i> <strong>Prix:</strong> {{ $event->prix }} DH</li>
+                                        <li><i class="fas fa-ticket-alt text-primary"></i>
+                                            <strong>Tickets disponibles:</strong>
+                                            @if($event->isSoldOut())
+                                                <span class="text-danger">Rupture de stock</span>
+                                            @else
+                                                <span class="text-success">{{ $event->nombre_place }} disponibles</span>
+                                            @endif
+                                        </li>
                                     </ul>
-                                    <div class="d-flex justify-content-between mt-auto">
 
-                                        <form action="{{ route('cart.store') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="event_id" value="{{ $event->id }}">
-                                            <div class="mb-3">
-                                                <label for="number_of_places" class="form-label">Nombre de places</label>
-                                                <input type="number" class="form-control" id="number_of_places" name="number_of_places" min="1" required>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Réserver</button>
-                                        </form>
-                                        <!-- Bouton Voir Détail -->
-                                        <a href="{{ route('event.show', $event->id) }}" class="btn btn-secondary">Voir Détail</a>
+                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                        @if(!$event->isSoldOut())
+                                            <form action="{{ route('cart.store') }}" method="POST" class="d-inline me-2">
+                                                @csrf
+                                                <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                                <div class="mb-3">
+                                                    <label for="number_of_places" class="form-label">Nombre de places souhaités</label>
+                                                    <input type="number" class="form-control" id="number_of_places" name="number_of_places" min="1" max="{{ $event->nombre_place }}" required>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                    <button type="submit" class="btn btn-primary">Réserver</button>
+                                                    <a href="{{ route('event.show', $event->id) }}" class="btn btn-primary ms-4">Voir Détail</a>
+                                                </div>
+                                            </form>
+                                        @else
+                                            <button class="btn btn-secondary me-2" disabled>Événement complet</button>
+                                        @endif
 
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -111,6 +126,11 @@
 
 @section('styles')
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Georgia', sans-serif; /* Appliquer la nouvelle police */
+}
     .slider_section {
         padding: 0;
     }

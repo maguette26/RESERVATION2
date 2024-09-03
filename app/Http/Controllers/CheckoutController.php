@@ -68,7 +68,7 @@ class CheckoutController extends Controller
         $reservation->date_reservation = now();
         $reservation->save();
 
-        // Enregistrez les détails de la réservation  
+        // Enregistrez les détails de la réservation
         foreach ($paniers as $panier) {
             $reservation->events()->attach($panier->id,[
                 'quantite' => $panier->quantity,

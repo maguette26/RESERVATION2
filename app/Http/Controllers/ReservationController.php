@@ -1,11 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Reservation;
-use App\Models\Event;
 use App\Models\User;
+use App\Models\Event;
+use Barryvdh\DomPDF\PDF;
+use App\Models\Reservation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ReservationController extends Controller
 {
@@ -25,7 +28,7 @@ class ReservationController extends Controller
         $event = Event::findOrFail($validated['event_id']);
 
         if ($event->nombre_place < $validated['nombre_place']) {
-            return back()->withErrors(['message' => 'Il n\'y a pas assez de places disponibles.']);
+            return back()->withErrors(['message' => 'Pas assez de places disponibles.']);
         }
 
         $reservation = new Reservation();
@@ -40,14 +43,26 @@ class ReservationController extends Controller
         $event->nombre_place -= $validated['nombre_place'];
         $event->save();
 
-        // Enlève les notifications
-        // Auth::user()->notify(new ReservationStatusNotification($reservation));
-        // $admin = User::where('admin', true)->first();
-        // if ($admin) {
-        //     $admin->notify(new ReservationStatusNotification($reservation));
-        // }
+        // Générer le code QR et l'enregistrer dans un fichier
+        $qrCodePath = public_path('qrcodes/' . $reservation->id . '.png');
+        QrCode::format('png')->size(300)->generate($reservation->id, $qrCodePath);
 
-        return redirect()->route('reservations.index')->with('message', 'Réservation créée avec succès!');
+        // Créer le contenu du ticket (optionnel : générer un PDF)
+        $pdf = PDF::loadView('reservations.ticket', compact('reservation', 'qrCodePath'));
+
+        // Envoyer l'e-mail avec le ticket
+        Mail::send('emails.ticket', ['reservation' => $reservation], function ($message) use ($reservation, $pdf) {
+            $message->to(Auth::user()->email)
+                    ->subject('Votre Ticket de Réservation')
+                    ->attachData($pdf->output(), 'ticket.pdf');
+        });
+
+        // Notifier l'admin
+        Http::post('http://localhost:3000/notify-admin', [
+            'reservation' => $reservation
+        ]);
+
+        return redirect()->route('reservations.index')->with('message', 'Réservation effectuée avec succès ! Un ticket a été envoyé à votre e-mail.');
     }
 
     public function show($id)
@@ -57,21 +72,25 @@ class ReservationController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|string|in:pending,confirmed,cancelled',
+{
+    $request->validate([
+        'status' => 'required|string|in:pending,confirmed,cancelled',
+    ]);
+
+    $reservation = Reservation::findOrFail($id);
+    $oldStatus = $reservation->status;
+    $reservation->status = $request->input('status');
+    $reservation->save();
+    if ($oldStatus !== $reservation->status) {
+        $user = $reservation->user;
+        Http::post('http://localhost:3000/notify-user', [
+            'reservation' => $reservation,
+            'user' => $user
         ]);
-
-        $reservation = Reservation::findOrFail($id);
-        $reservation->status = $request->input('status');
-        $reservation->save();
-
-        // Enlève les notifications
-        // $reservation->user->notify(new ReservationStatusNotification($reservation));
-
-        return redirect()->route('reservations.index')->with('success', 'Réservation mise à jour avec succès.');
     }
 
+    return redirect()->route('reservations.index')->with('success', 'Réservation mise à jour avec succès.');
+}
     public function destroy($id)
     {
         $reservation = Reservation::findOrFail($id);
@@ -80,24 +99,21 @@ class ReservationController extends Controller
         return redirect()->route('reservations.index')->with('success', 'Réservation supprimée avec succès.');
     }
 
-    public function cancel($id)
-    {
-        $reservation = Reservation::findOrFail($id);
-        if (Auth::id() !== $reservation->user_id) {
-            return redirect()->route('reservations.index')->withErrors(['message' => 'Vous n\'êtes pas autorisé à annuler cette réservation.']);
-        }
-        $reservation->status = 'cancelled';
-        $reservation->save();
+    // public function cancel($id)
+    // {
+    //     $reservation = Reservation::findOrFail($id);
 
-        // Enlève les notifications
-        // $reservation->user->notify(new ReservationStatusNotification($reservation));
-        // $admin = User::where('admin', true)->first();
-        // if ($admin) {
-        //     $admin->notify(new ReservationStatusNotification($reservation));
-        // }
+    //     if (Auth::id() !== $reservation->user_id) {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    //     foreach ($reservation->events as $event) {
+    //         $event->nombre_place += $reservation->quantite;
+    //         $event->save();
+    //     }
+    //     $reservation->delete();
 
-        return redirect()->route('reservations.index')->with('success', 'Réservation annulée avec succès.');
-    }
+    //     return redirect()->route('reservations.index')->with('message', 'Réservation annulée avec succès !');
+    // }
 
     public function confirm(Request $request)
     {
@@ -110,12 +126,9 @@ class ReservationController extends Controller
         $reservation->status = 'confirmed';
         $reservation->save();
 
-        // Enlève les notifications
-        // $admin = User::where('admin', true)->first();
-        // if ($admin) {
-        //     $admin->notify(new ReservationStatusNotification($reservation));
-        // }
+
 
         return redirect()->route('reservations.index')->with('success', 'Réservation confirmée avec succès.');
     }
+
 }

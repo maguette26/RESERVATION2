@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message">Message:</label>
-                            <textarea class="form-control" id="message" name="message" value="{{ old('message') }}" rows="5" required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="5" required>{{ old('message') }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Envoyer</button>
                     </form>
@@ -70,6 +70,10 @@
 @endsection
 
 <style>
+    body {
+        font-family: 'Georgia', serif; /* Appliquer la police Georgia à tout le texte */
+    }
+
     .contact-form p,
     .contact-info p {
         color: #000; /* Texte en noir */

@@ -102,7 +102,7 @@
                                 <td>
                                     @foreach ($reservation->events as $event)
                                         {{ $event->name }}
-                                
+
                                     @endforeach
                                 </td>
 

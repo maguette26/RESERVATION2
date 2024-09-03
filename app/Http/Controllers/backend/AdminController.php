@@ -118,7 +118,7 @@ return redirect('/');
         }
 
         $event->delete();
-        return redirect()->route('admin.index');
+        return redirect()->route('admin.index')>with('success', 'Événement supprimé avec succès.');
     }
 
     public function showUsers()

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Liste des types d'événements</h1>
+    <h1 class=" text-center mb-4 text-primary">Liste des types d'événements</h1>
     <a href="{{ route('admin.eventTypes.create') }}" class="btn btn-primary mb-3">Ajouter un type d'événement</a>
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

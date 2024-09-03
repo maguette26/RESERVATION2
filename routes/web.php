@@ -10,6 +10,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\backend\AdminController;
 use App\Http\Controllers\backend\EventypeController;
 
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
+
 });
 // routes client
 Route::get('/', [PageController::class , 'index'])->name('indexx') ;
@@ -63,15 +64,18 @@ Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store')
 Route::middleware('auth')->group(function () {
     Route::get('checkout/{id}', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::post('confirmation', [CheckoutController::class, 'confirmation'])->name('confirmation');
+    Route::post('/confirmation', [CheckoutController::class, 'confirmation'])->name('confirmation');
+    Route::get('/confirmation/success', function() { return view('confirmation');})->name('confirmation.success');
 });
 
+// API Routes
+Route::post('/notify-admin', [NotificationController::class, 'notifyAdmin']);
+Route::post('/notify-user', [NotificationController::class, 'notifyUser']);
 
-
+// Routes admin pour la gestion des evenements
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 Route::resource('admin/events', EventController::class);
 Route::prefix('admin')->group(function () {
-// Routes admin pour la gestion des evenements
     Route::get('/events', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/create', [AdminController::class, 'create'])->name('admin.create');
     Route::post('/create', [AdminController::class, 'store'])->name('admin.store');
@@ -90,7 +94,7 @@ Route::prefix('admin')->group(function () {
        Route::put('/eventTypes/{id}', [EventypeController::class, 'update'])->name('admin.eventTypes.update');
        Route::delete('/eventTypes/{id}', [EventypeController::class,'destroy'])->name('admin.eventTypes.destroy');
 });
-
+// Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 Route::middleware('auth')->group(function () {
     Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
@@ -99,7 +103,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
     Route::get('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::post('/reservations/{id}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
-
+    Route::get('/reservation/{id}/ticket', [ReservationController::class, 'showTicket'])->name('reservations.ticket');
+    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
 
 });
 

@@ -20,8 +20,6 @@
         display: flex;
         align-items: flex-start;
         gap: 20px;
-        /* Animation pour l'apparition de l'image et des informations */
-        animation: fadeInUp 0.8s forwards;
     }
 
     .event-img {
@@ -56,7 +54,6 @@
         font-weight: bold;
         color: #333;
         margin-bottom: 20px;
-        animation: fadeInUp 0.8s forwards;
     }
 
     .event-details p {
@@ -77,7 +74,6 @@
         border: 1px solid #ddd;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         text-align: center;
-        animation: fadeInUp 0.8s forwards;
     }
 
     .calendar-sync h3 {
@@ -112,7 +108,6 @@
         font-size: 1.2rem;
         color: #555;
         line-height: 1.6;
-        animation: fadeInUp 0.8s forwards;
     }
 
     .btn-primary {
@@ -133,35 +128,36 @@
 </style>
 
 <section class="container my-5">
-    <div class="event-title fade-in-up">{{ $event->name }}</div>
+    @foreach($event as $singleEvent)
+    <div class="event-title fade-in-up">{{ $singleEvent->name }}</div>
     <div class="event-container">
         <!-- Image de l'événement à gauche -->
-        <img src="{{ asset('storage/' . $event->image) }}" class="event-img img-fluid" alt="{{ $event->name }}">
+        <img src="{{ asset($singleEvent->image) }}" class="event-img img-fluid" alt="{{ $singleEvent->name }}">
 
         <!-- Informations de l'événement à droite -->
         <div class="event-info fade-in-up">
             <div class="event-details">
-                <p><strong>Date:</strong> {{ $event->date }}</p>
-                <p><strong>Lieu:</strong> {{ $event->lieu }}</p>
+                <p><strong>Date:</strong> {{ $singleEvent->date }}</p>
+                <p><strong>Lieu:</strong> {{ $singleEvent->lieu }}</p>
                 <p><strong>Ouverture des portes:</strong> 17h00</p>
-                <p><strong>Heure du spectacle:</strong> {{ $event->heure }} h</p>
-                <p><strong>Prix:</strong> {{ $event->prix }} DH</p>
+                <p><strong>Heure du spectacle:</strong> {{ $singleEvent->heure }} h</p>
+                <p><strong>Prix:</strong> {{ $singleEvent->prix }} DH</p>
             </div>
 
             <!-- Bloc d'ajout au calendrier en bas des informations -->
             <div class="calendar-sync fade-in-up">
                 <h3>Ajouter au calendrier pour ne pas oublier</h3>
-                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($event->name) }}&dates={{ date('Ymd\THis\Z', strtotime($event->start_time)) }}/{{ date('Ymd\THis\Z', strtotime($event->end_time)) }}&details={{ urlencode($event->description) }}&location={{ urlencode($event->lieu) }}&trp=false" target="_blank">
+                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text={{ urlencode($singleEvent->name) }}&dates={{ date('Ymd\THis\Z', strtotime($singleEvent->start_time)) }}/{{ date('Ymd\THis\Z', strtotime($singleEvent->end_time)) }}&details={{ urlencode($singleEvent->description) }}&location={{ urlencode($singleEvent->lieu) }}&trp=false" target="_blank">
                     <i class="fas fa-calendar-alt"></i> Google Calendar
                 </a>
             </div>
         </div>
     </div>
     <div class="event-description fade-in-up">
-        <p>{{ $event->description }}</p>
+        <p>{{ $singleEvent->description }}</p>
     </div>
     <!-- Bouton de retour -->
-
+    @endforeach
     <a href="{{ url('/') }}" class="btn btn-primary mt-4">Retour à la liste des événements</a>
 </section>
 @endsection

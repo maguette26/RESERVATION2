@@ -9,12 +9,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date_reservation','user_id', 'event_id', 'status', 'total'];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['name', 'date', 'nombre_place', 'lieu', 'description', 'image', 'prix','heure', 'event_type_id'];
 
     public function reservations()
     {
@@ -26,5 +21,8 @@ class Event extends Model
     return $this->belongsTo(EventType::class);
 }
 
-
+public function isSoldOut()
+{
+    return $this->nombre_place <= 0;
+}
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\backend;
 
+use App\Models\Event;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -113,13 +114,30 @@ class EventypeController extends Controller
     }
 
 
-    public function art(){
+    public function art()
+    {
+        $events = Event::whereHas('eventType', function ($query) {
+            $query->where('categorie', 'Exposition d\'art');
+        })->get();
 
+        return view('categorie.exposition', compact('events'));
     }
-    public function concert(){
 
+    public function concert()
+    {
+        $events = Event::whereHas('eventType', function ($query) {
+            $query->where('categorie', 'Concert');
+        })->get();
+
+        return view('categorie.concert', compact('events'));
     }
-    public function conference(){
 
+    public function conference()
+    {
+        $events = Event::whereHas('eventType', function ($query) {
+            $query->where('categorie', 'Conférence');
+        })->get();
+
+        return view('categorie.conference', compact('events'));
     }
 }

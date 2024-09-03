@@ -13,14 +13,19 @@
 @endsection
 
 <div class="container mt-4">
-    <h1 class="text-center mb-4 text-primary">Gestion des Utilisateurs</h1>
+    <h1 class="text-center mb-4 text-primary">Liste des Utilisateurs</h1>
 
     <style>
         /* Stylish Font */
         body {
-            font-family: 'Times New Roman', serif;
-        }
+        font-family: 'Champagne', sans-serif; /* Use 'Champagne' font */
+    }
 
+    .custom-table {
+        width: 130%; /* Adjust this value as needed */
+        max-width: 1200px;
+        margin: 0;
+    }
         .status-confirmed {
             color: #28a745; /* Green */
             font-weight: bold;
@@ -78,37 +83,35 @@
             color: #fff;
         }
     </style>
-    <div class="container">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Email</th>
-                    <th>Date d'inscription</th>
-                    <th>Dernière connexion</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($users as $user)
-                    <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->prenom }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
-                        <td>
-                            @if($user->last_login_at)
-                                {{ \Carbon\Carbon::parse($user->last_login_at)->format('d/m/Y H:i') }}
-                            @else
-                                Jamais connecté
-                            @endif
-                        </td>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 20%;">Nom</th>
+                            <th style="width: 20%;">Prenom</th>
+                            <th style="width: 30%;">Email</th>
+                            <th style="width: 10%;">Date d'inscription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($users as $user)
+                            <tr>
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->prenom }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
+
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
 @endsection

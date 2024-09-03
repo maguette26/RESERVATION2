@@ -162,6 +162,6 @@
     </div>
     <!-- Bouton de retour -->
 
-    <a href="{{ url('/page') }}" class="btn btn-primary mt-4">Retour à la liste des événements</a>
+    <a href="{{ url('/ ') }}" class="btn btn-primary mt-4">Retour à la liste des événements</a>
 </section>
 @endsection
