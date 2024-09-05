@@ -42,10 +42,13 @@ Route::middleware('auth')->group(function () {
 // routes client
 Route::get('/', [PageController::class , 'index'])->name('indexx') ;
 Route::get('/ap', [AproposController::class , 'index'])->name('index') ;
-Route::get('/contact', [ContactController::class, 'index']);
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit') ;
 Route::get('/recherche', [EventController::class, 'search'])->name('recherche');
 Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
+Route::get('/conditions', function () {
+    return view('reservations.conditions');
+})->name('conditions');
 
 // Routes pour les types d'événements
 Route::prefix('categorie')->group(function () {
@@ -67,10 +70,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/confirmation', [CheckoutController::class, 'confirmation'])->name('confirmation');
     Route::get('/confirmation/success', function() { return view('confirmation');})->name('confirmation.success');
 });
-
-// API Routes
-Route::post('/notify-admin', [NotificationController::class, 'notifyAdmin']);
-Route::post('/notify-user', [NotificationController::class, 'notifyUser']);
 
 // Routes admin pour la gestion des evenements
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -94,19 +93,18 @@ Route::prefix('admin')->group(function () {
        Route::put('/eventTypes/{id}', [EventypeController::class, 'update'])->name('admin.eventTypes.update');
        Route::delete('/eventTypes/{id}', [EventypeController::class,'destroy'])->name('admin.eventTypes.destroy');
 });
-// Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 Route::middleware('auth')->group(function () {
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reservations/{id}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::put('/reservations/{id}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
     Route::get('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::post('/reservations/{id}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
-    Route::get('/reservation/{id}/ticket', [ReservationController::class, 'showTicket'])->name('reservations.ticket');
-    Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations');
-
+    Route::get('/reservations/{id}/download', [ReservationController::class, 'download'])->name('reservations.download');
 });
+
 
 
 

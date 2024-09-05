@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->date('date');
-            $table->integer('nombre_place');
+            $table->integer('nombre_place')->default(0)->change();
             $table->string('lieu');
             $table->text('description');
             $table->string('image');

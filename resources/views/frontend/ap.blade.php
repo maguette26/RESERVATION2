@@ -7,7 +7,8 @@
         <h2 class="about-title text-center mb-5">À propos de nous</h2>
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <img src="{{asset('storage/images/ordi.png') }} class="img-fluid rounded about-image animate__animated animate__fadeInLeft" alt="Événement en ligne">
+                <img src="{{ asset('storage/images/ordi.png') }}" class="img-fluid rounded about-image animate__animated animate__fadeInLeft" alt="Événement en ligne">
+
             </div>
             <div class="col-lg-6">
                 <p class="about-text">
@@ -20,7 +21,8 @@
         </div>
         <div class="row align-items-center mt-5">
             <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
-                <img src="{{asset('storage/images/images.jpeg') }} class="img-fluid rounded about-image animate__animated animate__fadeInRight" alt="Système convivial">
+                <img src="{{ asset('storage/images/images.jpeg') }}" class="img-fluid rounded about-image animate__animated animate__fadeInRight" alt="Système convivial">
+ 
             </div>
             <div class="col-lg-6 order-lg-1">
                 <p class="about-text">

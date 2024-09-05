@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\ReservationDetail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
@@ -58,9 +59,9 @@ class CheckoutController extends Controller
 
     public function confirmation(Request $request)
     {
-
         $paniers = \Cart::getContent();
 
+        // Créer une nouvelle réservation
         $reservation = new Reservation();
         $reservation->user_id = Auth::id();
         $reservation->status = 'confirmation';
@@ -68,18 +69,40 @@ class CheckoutController extends Controller
         $reservation->date_reservation = now();
         $reservation->save();
 
-        // Enregistrez les détails de la réservation
+        // Enregistrez les détails de la réservation et décrémentez les places disponibles
         foreach ($paniers as $panier) {
-            $reservation->events()->attach($panier->id,[
+            // Attacher l'événement à la réservation avec la quantité et le prix
+            $reservation->events()->attach($panier->id, [
                 'quantite' => $panier->quantity,
                 'prix' => $panier->price,
             ]);
 
+            // Décrémenter le nombre de places disponibles pour l'événement
+            $event = Event::find($panier->id);
+            if ($event) {
+                // Vérifiez que le nombre de places réservées ne dépasse pas les places disponibles
+                if ($event->nombre_place >= $panier->quantity) {
+                    $event->nombre_place -= $panier->quantity;
+                    $event->save();
+                } else {
+                    Log::error("Le nombre de places réservées dépasse les places disponibles pour l'événement : " . $event->name);
+                }
+            }
         }
-
-        // Vider le panier après la confirmation
         \Cart::clear();
+//   // Notifier l'admin via Node.js
+//   $response = Http::post('http://localhost:3000/notify-admin', [
+//     'reservation_id' => $reservation->id,
+//     'user_id' => $reservation->user_id,
+//     'total' => $reservation->total,
+//     'date_reservation' => $reservation->date_reservation,
+//     'status' => $reservation->status,
+// ]);
 
+// if ($response->failed()) {
+//     Log::error("Échec de la notification de l'admin via Node.js.");
+// }
         return view('confirmation');
     }
+
 }

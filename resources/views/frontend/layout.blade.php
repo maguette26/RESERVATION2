@@ -98,7 +98,7 @@
                             <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user"></i> Profil</a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                {{-- <li><a class="dropdown-item" href="{{ route('reservation.index') }}">Mes Réservations</a></li> --}}
+                                <li><a class="dropdown-item" href="{{ route('reservations.index') }}">Mes Réservations</a></li>
                                 <li>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                                         @csrf

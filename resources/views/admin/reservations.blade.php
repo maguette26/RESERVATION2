@@ -19,7 +19,7 @@
     <style>
         /* Stylish Font */
         body {
-            font-family: 'Times New Roman', serif;
+            font-family: 'Champagne', sans-serif;
         }
 
         .status-confirmed {
@@ -68,16 +68,22 @@
         }
 
         /* Button styling */
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            color: #fff;
-        }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            color: #fff;
-        }
+        .btn-primary {
+    background-color: #007bff; /* Même couleur de fond */
+    border: 1px solid #007bff; /* Bordure fine de 1px pour correspondre à "Confirmer" */
+    color: #fff;
+    padding: 0.25rem 0.5rem; /* Ajuste le padding pour la même taille globale */
+    border-radius: 0.25rem; /* Coins arrondis similaires */
+    font-size: 0.875rem; /* Taille de police ajustée pour correspondre */
+    min-width: 100px; /* Largeur minimale pour uniformité */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3; /* Bordure en harmonie avec la couleur de hover */
+    color: #fff;
+}
     </style>
 
     <div class="card shadow-sm">

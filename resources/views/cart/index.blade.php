@@ -54,7 +54,7 @@
                                         <div class="input-group input-group-sm mb-2">
                                             <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" class="form-control quantity-input" aria-label="Quantité" data-item-id="{{ $item->id }}" data-price="{{ $item->price }}">
                                             <div class="input-group-append">
-                                                <span class="input-group-text">Ajouter le nombre de tickets souhaité</span>
+                                                <span class="input-group-text">Augmenter le nombre</span>
                                             </div>
                                         </div>
                                         <button type="submit" class="btn btn-outline-primary btn-sm">Mettre à jour</button>
@@ -62,11 +62,16 @@
                                     <form action="{{ route('cart.destroy', $item->id) }}" method="POST" class="mt-2">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmDelete()">Supprimer</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmDelete(event)">Supprimer</button>
                                     </form>
                                 </div>
                             </div>
                         </li>
+                        <script>
+                            function confirmDelete(event) {
+                                return confirm("Êtes-vous sûr de vouloir supprimer cet événement ?");
+                            }
+                        </script>
                     @endforeach
                 </ul>
 

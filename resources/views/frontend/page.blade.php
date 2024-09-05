@@ -1,6 +1,13 @@
 @extends('frontend.layout')
 
 @section('content')
+<!-- Affichage du message flash -->
+@if (session('success'))
+<div class="flash-message alert alert-success" role="alert">
+    {{ session('success') }}
+</div>
+@endif
+
 <!-- header -->
 <section class="slider_section position-relative">
     <div class="container">
@@ -11,7 +18,6 @@
                 <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
             </ol>
             <div class="carousel-inner">
-
                 <div class="carousel-item active">
                     <img src="{{ asset('storage/images/hero.jpg') }}" class="d-block w-100" alt="Concert">
                     <div class="carousel-caption d-flex align-items-center justify-content-center">
@@ -73,7 +79,37 @@
                             <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; overflow: hidden;">
                                 <div class="position-relative">
                                     <img src="{{ asset($event->image) }}" class="card-img-top" alt="{{ $event->name }}" style="height: 200px; object-fit: cover;">
+
+                                    <!-- Badge de catégorie -->
                                     <div class="badge bg-primary position-absolute top-0 start-0 m-2 px-3 py-2" style="font-size: 0.8rem;">{{ $event->eventType->categorie }}</div>
+
+                                    <!-- Badge "Rupture de stock" -->
+                                    @if($event->isSoldOut())
+                                    <div style="position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%) rotate(-10deg);
+                                    padding: 30px 60px;
+
+                                    color: #b12020;
+                                    font-size: 64px;
+                                    font-weight: bold;
+                                    text-transform: uppercase;
+
+                                    border-radius: 6px;
+
+                                    letter-spacing: 5px;
+                                    z-index: 20;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    text-shadow: 3px 3px 5px rgba(10, 10, 10, 0.6);
+                                    opacity: 0.95;
+                                    width: 70%;
+                                    height: 70%;">
+                            SOLD OUT
+                        </div>
+                                    @endif
                                 </div>
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title text-primary">{{ $event->name }}</h5>
@@ -85,9 +121,9 @@
                                         <li><i class="fas fa-ticket-alt text-primary"></i>
                                             <strong>Tickets disponibles:</strong>
                                             @if($event->isSoldOut())
-                                                <span class="text-danger">Rupture de stock</span>
+                                              <span class="text-danger">Rupture de stock</span>
                                             @else
-                                                <span class="text-success">{{ $event->nombre_place }} disponibles</span>
+                                               <span class="text-success">{{ $event->nombre_place }} disponibles</span>
                                             @endif
                                         </li>
                                     </ul>
@@ -106,13 +142,10 @@
                                                     <a href="{{ route('event.show', $event->id) }}" class="btn btn-primary ms-4">Voir Détail</a>
                                                 </div>
                                             </form>
-                                        @else
-                                            <button class="btn btn-secondary me-2" disabled>Événement complet</button>
+                                        {{-- @else
+                                            <button class="btn btn-secondary me-2" disabled>Événement indisponible</button> --}}
                                         @endif
-
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -128,9 +161,10 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-body {
-    font-family: 'Georgia', sans-serif; /* Appliquer la nouvelle police */
-}
+    body {
+        font-family: 'Georgia', sans-serif;
+    }
+
     .slider_section {
         padding: 0;
     }
@@ -157,27 +191,47 @@ body {
         margin-top: 1rem;
     }
 
-    .detail-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        height: 100%;
-        padding: 2rem;
+    .flash-message {
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        margin-bottom: 1rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
     }
-</style>
-@endsection
 
-@section('scripts')
-<script>
-    $(document).ready(function(){
-        // Initialisation du carousel Bootstrap
-        var myCarousel = document.querySelector('#carouselExampleIndicators');
-        var carousel = new bootstrap.Carousel(myCarousel, {
-            interval: 5000,
-            wrap: true
-        });
-    });
-</script>
+    .alert-success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .badge-sold-out {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg); /* Centre le badge et applique une rotation */
+    padding: 20px 30px; /* Augmente l'espace à l'intérieur du badge */
+    background-color: #d9534f; /* Rouge intense pour le fond */
+    color: #fff;
+    font-size: 3rem; /* Augmente considérablement la taille du texte */
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 4px solid #fff; /* Bordure blanche épaisse */
+    border-radius: 8px; /* Coins légèrement arrondis */
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5); /* Ajoute une ombre prononcée */
+    letter-spacing: 4px; /* Augmente l'espacement entre les lettres */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ajoute une ombre au texte pour plus de relief */
+    opacity: 0.95;
+}
+
+</style>
 @endsection

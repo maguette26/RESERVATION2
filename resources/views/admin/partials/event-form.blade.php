@@ -32,7 +32,7 @@
     <label for="image" class="form-label">Image</label>
     <input type="file" class="form-control" id="image" name="image">
     @isset($event->image)
-        <img src="{{ asset('storage/'.$event->image) }}" alt="Image actuelle" class="img-thumbnail mt-2" style="max-width: 200px;">
+        <img src="{{ asset($event->image) }}" alt="Image actuelle" class="img-thumbnail mt-2" style="max-width: 200px;">
     @endisset
 </div>
 
