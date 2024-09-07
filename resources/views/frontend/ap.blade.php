@@ -8,7 +8,6 @@
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <img src="{{ asset('storage/images/ordi.png') }}" class="img-fluid rounded about-image animate__animated animate__fadeInLeft" alt="Événement en ligne">
-
             </div>
             <div class="col-lg-6">
                 <p class="about-text">
@@ -22,7 +21,6 @@
         <div class="row align-items-center mt-5">
             <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
                 <img src="{{ asset('storage/images/images.jpeg') }}" class="img-fluid rounded about-image animate__animated animate__fadeInRight" alt="Système convivial">
- 
             </div>
             <div class="col-lg-6 order-lg-1">
                 <p class="about-text">
@@ -39,8 +37,11 @@
 @endsection
 
 <style>
-   body, h1, h2, h3, h4, h5, h6, p, a, button, input, select {
-            font-family: 'Georgia', Times;
+    /* Applique la police Copperplate à l'ensemble du contenu */
+    body, h1, h2, h3, h4, h5, h6, p, a, button, input, select {
+        font-family: 'Copperplate', serif;
+    }
+
     .about-text {
         margin-bottom: 20px;
         font-size: 1.2rem;

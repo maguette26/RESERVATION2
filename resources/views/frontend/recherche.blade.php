@@ -16,6 +16,10 @@
         }
     }
 
+    body, .event-title, .event-details p, .calendar-sync h3, .btn-primary, .event-description {
+        font-family: 'Copperplate',serif;
+    }
+
     .event-container {
         display: flex;
         align-items: flex-start;
@@ -106,7 +110,7 @@
     .event-description {
         margin-top: 20px;
         font-size: 1.2rem;
-        color: #555;
+        color: #0c0909;
         line-height: 1.6;
     }
 
@@ -156,7 +160,6 @@
     <div class="event-description fade-in-up">
         <p>{{ $singleEvent->description }}</p>
     </div>
-    <!-- Bouton de retour -->
     @endforeach
     <a href="{{ url('/') }}" class="btn btn-primary mt-4">Retour à la liste des événements</a>
 </section>

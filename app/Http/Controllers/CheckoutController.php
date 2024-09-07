@@ -90,18 +90,21 @@ class CheckoutController extends Controller
             }
         }
         \Cart::clear();
-//   // Notifier l'admin via Node.js
-//   $response = Http::post('http://localhost:3000/notify-admin', [
-//     'reservation_id' => $reservation->id,
-//     'user_id' => $reservation->user_id,
-//     'total' => $reservation->total,
-//     'date_reservation' => $reservation->date_reservation,
-//     'status' => $reservation->status,
-// ]);
+  // Notifier l'admin via Node.js
+  $response = Http::asJson()->post('http://localhost:3000/notify-admin', [
+    'reservation_id' => $reservation->id,
+    'user_id' => $reservation->user_id,
+    'total' => $reservation->total,
+    'date_reservation' => $reservation->date_reservation,
+    'status' => $reservation->status,
+]);
+if ($response->failed()) {
+    Log::error("Échec de la notification de l'admin via Node.js.");
+}
 
-// if ($response->failed()) {
-//     Log::error("Échec de la notification de l'admin via Node.js.");
-// }
+if ($response->failed()) {
+    Log::error("Échec de la notification de l'utilisateur via Node.js.");
+}
         return view('confirmation');
     }
 

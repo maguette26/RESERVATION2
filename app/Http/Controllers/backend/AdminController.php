@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -137,24 +138,37 @@ return redirect('/');
 
 public function updateReservationStatus(Request $request, $id)
 {
-    $reservation = Reservation::findOrFail($id);
-    $reservation->status = $request->status;
+    $reservation = Reservation::with('events')->find($id);
+
+    if (!$reservation) {
+        return redirect()->back()->withErrors(['message' => 'Réservation non trouvée.']);
+    }
+
+    $status = $request->input('status');
+    $reservation->status = $status;
     $reservation->save();
 
-    // Envoyer une notification via HTTP
-    try {
-        $response = Http::post('http://localhost:3000/api/notifications', [
-            'reservationId' => $reservation->id,
-            'status' => $reservation->status,
-        ]);
+    // Log les informations pour déboguer
+    Log::info('Updating reservation status:', [
+        'reservation_id' => $reservation->id,
+        'user_email' => $reservation->user->email,
+        'status' => $reservation->status,
+    ]);
 
-        if ($response->successful()) {
-            return redirect()->route('admin.reservations')->with('status', 'Reservation status updated successfully');
-        } else {
-            return redirect()->route('admin.reservations')->with('error', 'Failed to send notification');
-        }
-    } catch (\Exception $e) {
-        return redirect()->route('admin.reservations')->with('error', 'Exception occurred: ' . $e->getMessage());
+    $response = Http::post('http://localhost:3000/update-reservation-status', [
+        'reservation_id' => $reservation->id,
+        'user_email' => $reservation->user->email,
+        'status' => $reservation->status,
+        
+    ]);
+
+    if ($response->failed()) {
+        Log::error("Échec de la notification de l'utilisateur via Node.js.");
+    } else {
+        Log::info('Notification de l\'utilisateur envoyée.');
     }
+
+    return redirect()->back()->with('success', 'Statut de la réservation mis à jour et utilisateur notifié.');
 }
+
 }

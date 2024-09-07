@@ -57,12 +57,15 @@
                                                 <span class="input-group-text">Augmenter le nombre</span>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">Mettre à jour</button>
-                                    </form>
-                                    <form action="{{ route('cart.destroy', $item->id) }}" method="POST" class="mt-2">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmDelete(event)">Supprimer</button>
+                                        <div class="d-flex justify-content-between">
+                                            <button type="submit" class="btn btn-outline-primary btn-sm me-2">Mettre à jour</button>
+                                            <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirmDelete(event)">Supprimer</button>
+                                            </form>
+                                        </div>
+                                        
                                     </form>
                                 </div>
                             </div>
@@ -86,5 +89,3 @@
     </div>
 </div>
 @endsection
-
-.
